@@ -1,0 +1,66 @@
+Good call 👍 — when things get messy, a full clean reset is the fastest way to fix Kubernetes worker nodes.
+Follow this exact order on EACH worker node 👇
+STEP 1: Reset Kubernetes
+sudo kubeadm reset -f
+STEP 2: Stop services
+sudo systemctl stop kubelet
+sudo systemctl stop containerd
+🧹 STEP 3: Remove Kubernetes + configs
+sudo apt purge -y kubeadm kubectl kubelet kubernetes-cni
+sudo apt autoremove -y
+sudo rm -rf /etc/kubernetes/
+sudo rm -rf /var/lib/kubelet/
+sudo rm -rf /var/lib/etcd/
+sudo rm -rf ~/.kube
+🧹 STEP 4: Clean container runtime (IMPORTANT)
+sudo rm -rf /etc/containerd
+sudo rm -rf /var/lib/containerd
+🧹 STEP 5: Clean networking leftovers
+sudo iptables -F
+sudo iptables -t nat -F
+sudo iptables -t mangle -F
+sudo iptables -X
+sudo ip link delete cni0 || true
+sudo ip link delete flannel.1 || true
+🧹 STEP 6: Reboot node (RECOMMENDED)
+sudo reboot
+
+🚀 AFTER REBOOT — Fresh Install
+Now reinstall cleanly 👇
+🔧 1. Disable swap
+sudo swapoff -a
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
+🔧 2. Install containerd (clean)
+sudo apt update
+sudo apt install -y containerd
+sudo mkdir -p /etc/containerd
+sudo containerd config default | sudo tee /etc/containerd/config.toml
+Edit config:
+sudo nano /etc/containerd/config.toml
+👉 Set:
+SystemdCgroup = true
+🔧 3. Start containerd
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+🔧 4. Install Kubernetes
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | \
+sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes.gpg
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes.gpg] \
+https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | \
+sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt update
+sudo apt install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+
+////Master Node Only
+🔗 5. Join cluster (NEW TOKEN)
+
+On master node:
+
+kubeadm token create --print-join-command
+
+Run output on worker:
+
+sudo kubeadm join <MASTER_IP>:6443 --token <TOKEN> \
+--discovery-token-ca-cert-hash sha256:<HASH>
