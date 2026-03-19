@@ -79,7 +79,7 @@ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
 
 # NOW YOUR KUBERNETES MASTER NODE IS ACTIVE AND DO NOT FORGET TO COPY 
-kubeadm join 192.168.0.83:6443 --token e3mm3x.khfndv3o4ys87jfs \
+sudo kubeadm join 192.168.0.83:6443 --token e3mm3x.khfndv3o4ys87jfs \
         --discovery-token-ca-cert-hash sha256:a89d9cc70af4f5daed64806c82e89772148f1fe641468b0bd991fcba1e3ce957 (This is used by Worker node to join 
 master node with authentication)
 
