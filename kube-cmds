@@ -1,5 +1,8 @@
 kubectl apply -f mysqldb-config.yaml
 kubectl apply -f mysql-deployment.yaml
 kubectl apply -f php-deployment.yaml
+kubectl get pod
+// If you are getting "ImagePullBackOff" this error, then go to worker nodes and do internet-reset
+//and again apply all above commands 
 
 now browse with worker node ip:30007
