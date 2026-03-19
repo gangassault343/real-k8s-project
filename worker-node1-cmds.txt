@@ -1,0 +1,148 @@
+    1  sudo apt update && sudo apt upgrade -y
+    2  sudo swapoff -a
+    3  sudo sed -i '/ swap / s/^/#/' /etc/fstab
+    4  sudo modprobe overlay
+    5  sudo modprobe br_netfilter
+    6  cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+    7  net.bridge.bridge-nf-call-iptables = 1
+    8  net.ipv4.ip_forward = 1
+    9  net.bridge.bridge-nf-call-ip6tables = 1
+   10  EOF
+   11  sudo sysctl --system
+   12  sudo apt install -y ca-certificates curl gnupg
+   13  sudo install -m 0755 -d /etc/apt/keyrings
+   14  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.gpg > /dev/null
+   15  echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+   16    https://download.docker.com/linux/ubuntu \
+   17    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   18  sudo apt update
+   19  sudo apt install -y docker-ce docker-ce-cli containerd.io
+   20  sudo apt install docker.io
+   21  sudo systemctl enable docker
+   22  sudo systemctl start docker
+   23  sudo mkdir -p /etc/apt/keyrings
+   24  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key |   sudo tee /etc/apt/keyrings/kubernetes-apt-keyring.gpg > /dev/null
+   25  echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] \
+   26  https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   27  sudo apt update
+   28  sudo apt install -y kubelet kubeadm kubectl
+   29  sudo rm -f /etc/apt/sources.list.d/docker.list
+   30  sudo rm -f /etc/apt/sources.list.d/kubernetes.list
+   31  sudo rm -rf /etc/apt/keyrings/*
+   32  sudo apt update
+   33  sudo apt install -y ca-certificates curl gnupg
+   34  # Create keyrings dir
+   35  sudo mkdir -p /etc/apt/keyrings
+   36  # Add Docker GPG key (FIXED)
+   37  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+   38  # Set permissions
+   39  sudo chmod a+r /etc/apt/keyrings/docker.gpg
+   40  # Add Docker repo
+   41  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+   42  https://download.docker.com/linux/ubuntu noble stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   43  sudo apt update
+   44  sudo apt install -y ca-certificates curl gnupg
+   45  sudo mkdir -p /etc/apt/keyrings
+   46  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+   47  sudo chmod a+r /etc/apt/keyrings/docker.gpg
+   48  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+   49  https://download.docker.com/linux/ubuntu noble stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   50  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes.gpg
+   51  sudo chmod a+r /etc/apt/keyrings/kubernetes.gpg
+   52  echo "deb [signed-by=/etc/apt/keyrings/kubernetes.gpg] \
+   53  https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   54  sudo apt update
+   55  sudo apt install -y docker-ce docker-ce-cli containerd.io
+   56  sudo apt install -y kubelet kubeadm kubectl
+   57  sudo apt-mark hold kubelet kubeadm kubectl
+   58  sudo systemctl enable docker
+   59  sudo systemctl start docker
+   60  systemctl status docker
+   61  sudo apt install -y docker-ce docker-ce-cli containerd.io
+   62  sudo systemctl start docker
+   63  sudo systemctl enable docker
+   64  sudo systemctl enable kubelet
+   65  kubeadm join 10.96.0.1:6443 --token <TOKEN> --discovery-token-ca-cert-hash sha256:<HASH>
+   66  kubeadm join 192.168.0.66:6443 --token g6qc89.vruwpshxbthr5hjh         --discovery-token-ca-cert-hash sha256:f3ab3a846234d18be50ee3020c22dc6e97d3cabdd7648000cbf6f69b570cd34b
+   67  clear
+   68  kubeadm join 192.168.0.66:6443 --token g6qc89.vruwpshxbthr5hjh         --discovery-token-ca-cert-hash sha256:f3ab3a846234d18be50ee3020c22dc6e97d3cabdd7648000cbf6f69b570cd34b
+   69  sudo kubeadm join 192.168.1.10:6443 --token abcd12.34efgh5678ijkl --discovery-token-ca-cert-hash sha256:9f8c7a6b5d4e3c2b1a0f1234567890abcdef1234567890abcdef1234567890ab
+   70  clear
+   71  sudo kubeadm join 192.168.1.10:6443 --token abcd12.34efgh5678ijkl --discovery-token-ca-cert-hash sha256:9f8c7a6b5d4e3c2b1a0f1234567890abcdef1234567890abcdef1234567890ab
+   72  kubeadm join 192.168.0.66:6443 --token 3bazr5.6wsjpxxr903zvw0u --discovery-token-ca-cert-hash sha256:f3ab3a846234d18be50ee3020c22dc6e97d3cabdd7648000cbf6f69b570cd34b
+   73  sudo kubeadm reset -f
+   74  sudo systemctl restart kubelet
+   75  kubeadm join 192.168.0.66:6443 --token 3bazr5.6wsjpxxr903zvw0u --discovery-token-ca-cert-hash sha256:f3ab3a846234d18be50ee3020c22dc6e97d3cabdd7648000cbf6f69b570cd34b
+   76  clear
+   77  kubeadm join 192.168.0.66:6443 --token 3bazr5.6wsjpxxr903zvw0u --discovery-token-ca-cert-hash sha256:f3ab3a846234d18be50ee3020c22dc6e97d3cabdd7648000cbf6f69b570cd34b
+   78  sudo kubeadm join 192.168.0.66:6443 --token 3bazr5.6wsjpxxr903zvw0u --discovery-token-ca-cert-hash sha256:f3ab3a846234d18be50ee3020c22dc6e97d3cabdd7648000cbf6f69b570cd34b
+   79  sudo systemctl stop containerd
+   80  sudo rm -rf /etc/containerd/config.toml
+   81  sudo containerd config default | sudo tee /etc/containerd/config.toml
+   82  sudo nano /etc/containerd/config.toml
+   83  sudo systemctl daemon-reexec
+   84  sudo systemctl restart containerd
+   85  sudo systemctl enable containerd
+   86  sudo systemctl restart kubelet
+   87  crictl info
+   88  sudo kubeadm reset -f
+   89  sudo kubeadm join <MASTER_IP>:6443 --token <NEW_TOKEN> --discovery-token-ca-cert-hash sha256:<HASH>
+   90  sudo journalctl -u containerd -xe
+   91  kubeadm join 192.168.0.66:6443 --token 3bazr5.6wsjpxxr903zvw0u --discovery-token-ca-cert-hash sha256:f3ab3a846234d18be50ee3020c22dc6e97d3cabdd7648000cbf6f69b570cd34b
+   92  sudo nano /etc/containerd/config.toml
+   93  sudo kubeadm reset -f
+   94  sudo systemctl stop kubelet
+   95  sudo systemctl stop containerd
+   96  sudo apt purge -y kubeadm kubectl kubelet kubernetes-cni
+   97  sudo apt autoremove -y
+   98  sudo rm -rf /etc/kubernetes/
+   99  sudo rm -rf /var/lib/kubelet/
+  100  sudo rm -rf /var/lib/etcd/
+  101  sudo rm -rf ~/.kube
+  102  sudo rm -rf /etc/containerd
+  103  sudo rm -rf /var/lib/containerd
+  104  sudo iptables -F
+  105  sudo iptables -t nat -F
+  106  sudo iptables -t mangle -F
+  107  sudo iptables -X
+  108  sudo ip link delete cni0 || true
+  109  sudo ip link delete flannel.1 || true
+  110  sudo reboot
+  111  sudo swapoff -a
+  112  sudo sed -i '/ swap / s/^/#/' /etc/fstab
+  113  sudo apt update
+  114  sudo apt install -y containerd
+  115  sudo mkdir -p /etc/containerd
+  116  sudo containerd config default | sudo tee /etc/containerd/config.toml
+  117  sudo nano /etc/containerd/config.toml
+  118  sudo systemctl restart containerd
+  119  sudo systemctl enable containerd
+  120  sudo mkdir -p /etc/apt/keyrings
+  121  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes.gpg
+  122  echo "deb [signed-by=/etc/apt/keyrings/kubernetes.gpg] \
+  123  https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  124  sudo apt update
+  125  sudo apt install -y kubelet kubeadm kubectl
+  126  sudo apt-mark hold kubelet kubeadm kubectl
+  127  kubeadm join 192.168.0.66:6443 --token hy33fs.cuwbi7cy8xtyuwat --discovery-token-ca-cert-hash sha256:f3ab3a846234d18be50ee3020c22dc6e97d3cabdd7648000cbf6f69b570cd34b
+  128  sudo modprobe br_netfilter
+  129  sudo modprobe overlay
+  130  cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+  131  overlay
+  132  br_netfilter
+  133  EOF
+  134  cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+  135  net.bridge.bridge-nf-call-iptables = 1
+  136  net.bridge.bridge-nf-call-ip6tables = 1
+  137  net.ipv4.ip_forward = 1
+  138  EOF
+  139  sudo sysctl --system
+  140  ls /proc/sys/net/bridge/
+  141  sudo kubeadm join 192.168.0.66:6443 --token hy33fs.cuwbi7cy8xtyuwat --discovery-token-ca-cert-hash sha256:f3ab3a846234d18be50ee3020c22dc6e97d3cabdd7648000cbf6f69b570cd34b
+  142  sudo chmod 777 /etc/resolv.conf 
+  143  sudo vi /etc/resolv.conf 
+  144  www.google.com
+  145  ping www.google.com
+  146  history -o wide
+  147  history
+  148  history > worker-node1-cmds.txt

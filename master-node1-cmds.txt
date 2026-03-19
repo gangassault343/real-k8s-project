@@ -1,0 +1,218 @@
+    1  kubectl get nodes
+    2  /usr/bin/xauth:  file /home/ubuntu/.Xauthority does not exi
+    3  To run a command as adminis'
+    4  sudo apt update && sudo apt upgrade -y
+    5  sudo swapoff -a
+    6  sudo sed -i '/ swap / s/^/#/' /etc/fstab
+    7  sudo modprobe overlay
+    8  sudo modprobe br_netfilter
+    9  cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+   10  net.bridge.bridge-nf-call-iptables = 1
+   11  net.ipv4.ip_forward = 1
+   12  net.bridge.bridge-nf-call-ip6tables = 1
+   13  EOF
+   14  sudo sysctl --system
+   15  sudo apt install -y ca-certificates curl gnupg
+   16  sudo install -m 0755 -d /etc/apt/keyrings
+   17  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.gpg > /dev/null
+   18  echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+   19    https://download.docker.com/linux/ubuntu \
+   20    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   21  sudo apt update
+   22  sudo apt install -y docker-ce docker-ce-cli containerd.io
+   23  sudo systemctl enable docker
+   24  sudo systemctl start docker
+   25  sudo apt install docker.io
+   26  sudo systemctl enable docker
+   27  sudo systemctl start docker
+   28  sudo systemctl status docker
+   29  sudo apt install containerd.io
+   30  sudo mkdir -p /etc/apt/keyrings
+   31  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key |   sudo tee /etc/apt/keyrings/kubernetes-apt-keyring.gpg > /dev/null
+   32  echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] \
+   33  https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   34  sudo apt update
+   35  sudo apt install -y kubelet kubeadm kubectl
+   36  GPG error: https://download.docker.com/linux/ubuntu noble InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 7EA0A9C3F273FCD8
+   37  E: The repository 'https://download.docker.com/linux/ubuntu noble InRelease' is not signed.
+   38  N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+   39  N: See apt-secure(8) manpage for repository creation and user configuration details.
+   40  W: GPG error: https://prod-cdn.packages.k8s.io/repositories/isv:/kubernetes:/core:/stable:/v1.29/deb  InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 234654DA9A296436
+   41  E: The repository 'https://pkgs.k8s.io/core:/stable:/v1.29/deb  InRelease' is not signed.
+   42  N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+   43  N: See apt-secure(8) manpage for repository creation and user configuration details.
+   44  Reading package lists... Done
+   45  Building dependency tree... Done
+   46  Reading state information... Done
+   47  No apt package "kubeadm", but there is a snap with that name.
+   48  Try "snap install kubeadm"
+   49  No apt package "kubectl", but there is a snap with that name.
+   50  Try "snap install kubectl"
+   51  No apt package "kubelet", but there is a snap with that name.
+   52  Try "snap install kubelet"
+   53  E: Unable to locate package kubelet
+   54  E: Unable to locate package kubeadm
+   55  E: Unable to locate package kubectl
+   56  sudo rm -f /etc/apt/sources.list.d/docker.list
+   57  sudo rm -f /etc/apt/sources.list.d/kubernetes.list
+   58  sudo rm -rf /etc/apt/keyrings/*
+   59  sudo rm -f /etc/apt/sources.list.d/docker.list
+   60  sudo rm -f /etc/apt/sources.list.d/kubernetes.list
+   61  sudo rm -rf /etc/apt/keyrings/*
+   62  sudo apt update
+   63  sudo apt install -y ca-certificates curl gnupg
+   64  # Create keyrings dir
+   65  sudo mkdir -p /etc/apt/keyrings
+   66  # Add Docker GPG key (FIXED)
+   67  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+   68  # Set permissions
+   69  sudo chmod a+r /etc/apt/keyrings/docker.gpg
+   70  # Add Docker repo
+   71  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+   72  https://download.docker.com/linux/ubuntu noble stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   73  sudo apt update
+   74  sudo apt install -y ca-certificates curl gnupg
+   75  # Create keyrings dir
+   76  sudo mkdir -p /etc/apt/keyrings
+   77  # Add Docker GPG key (FIXED)
+   78  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+   79  # Set permissions
+   80  sudo chmod a+r /etc/apt/keyrings/docker.gpg
+   81  # Add Docker repo
+   82  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+   83  https://download.docker.com/linux/ubuntu noble stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/nullsudo apt update
+   84  sudo apt install -y ca-certificates curl gnupg
+   85  sudo mkdir -p /etc/apt/keyrings
+   86  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+   87  sudo chmod a+r /etc/apt/keyrings/docker.gpg
+   88  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+   89  https://download.docker.com/linux/ubuntu noble stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   90  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes.gpg
+   91  sudo chmod a+r /etc/apt/keyrings/kubernetes.gpg
+   92  echo "deb [signed-by=/etc/apt/keyrings/kubernetes.gpg] \
+   93  https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   94  sudo apt update
+   95  sudo apt install -y docker-ce docker-ce-cli containerd.io
+   96  sudo apt install -y kubelet kubeadm kubectl
+   97  sudo apt-mark hold kubelet kubeadm kubectl
+   98  sudo systemctl enable docker
+   99  sudo systemctl start docker
+  100  sudo systemctl enable kubelet
+  101  docker --version
+  102  kubeadm version
+  103  kubectl version --client
+  104  # Initialize cluster
+  105  sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+  106  clear
+  107  sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+  108  I0318 09:09:32.953989   10289 version.go:256] remote version is much newer: v1.35.2; falling back to: stable-1.29
+  109  [init] Using Kubernetes version: v1.29.15
+  110  [preflight] Running pre-flight checks
+  111  error execution phase preflight: [preflight] Some fatal errors occurred:
+  112  , error: exit status 1
+  113  [preflight] If you know what you are doing, you can make a check non-fatal with `--ignore-preflight-errors=...`
+  114  To see the stack trace of this error execute with --v=5 or higher
+  115  sudo mkdir -p /etc/containerd
+  116  sudo containerd config default | sudo tee /etc/containerd/config.toml
+  117  sudo nano /etc/containerd/config.toml
+  118  sudo systemctl restart containerd
+  119  sudo systemctl enable containerd
+  120  sudo systemctl status containerd
+  121  sudo systemctl restart kubelet
+  122  sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+  123  mkdir -p $HOME/.kube
+  124  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  125  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  126  kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+  127  kubectl get svc
+  128  kubectl get nodes
+  129  kubeadm join 192.168.0.66:6443 --token g6qc89.vruwpshxbthr5hjh         --discovery-token-ca-cert-hash sha256:f3ab3a846234d18be50ee3020c22dc6e97d3cabdd7648000cbf6f69b570cd34b
+  130  kubeadm token create --print-join-command
+  131  kubectl get nodes
+  132  kubectl get tokens'
+  133  kubectl get tokens
+  134  history
+  135  1
+  136  cat ~/.bash_history
+  137  history
+  138  kubectl get nodes
+  139  kubeadm token create --print-join-command
+  140  kubectl get nodes
+  141  See https://ubuntu.com/esm or run: sudo pro status
+  142  *** System restart required ***
+  143  Last login: Wed Mar 18 09:35:56 2026 from 49.43.243.36
+  144  ubuntu@ip-192-168-0-66:~$ history
+  145  ubuntu@ip-192-168-0-66:~$ 1
+  146  1: command not found
+  147  ubuntu@ip-192-168-0-66:~$ cat ~/.bash_history
+  148  cat: /home/ubuntu/.bash_history: No such file or directory
+  149  ubuntu@ip-192-168-0-66:~$ history
+  150  See https://ubuntu.com/esm or run: sudo pro status
+  151  *** System restart required ***
+  152  Last login: Wed Mar 18 09:35:56 2026 from 49.43.243.36
+  153  ubuntu@ip-192-168-0-66:~$ history
+  154  ubuntu@ip-192-168-0-66:~$ 1
+  155  1: command not found
+  156  ubuntu@ip-192-168-0-66:~$ cat ~/.bash_history
+  157  cat: /home/ubuntu/.bash_history: No such file or directory
+  158  ubuntu@ip-192-168-0-66:~$ history
+  159  See https://ubuntu.com/esm or run: sudo pro status
+  160  *** System restart required ***
+  161  Last login: Wed Mar 18 09:35:56 2026 from 49.43.243.36
+  162  ubuntu@ip-192-168-0-66:~$ history
+  163  ubuntu@ip-192-168-0-66:~$ 1
+  164  1: command not found
+  165  ubuntu@ip-192-168-0-66:~$ cat ~/.bash_history
+  166  cat: /home/ubuntu/.bash_history: No such file or directory
+  167  ubuntu@ip-192-168-0-66:~$ history
+  168  kubectl get nodes
+  169  kubectl get svc
+  170  kubectl get ns
+  171  kubectl get all -n kube-public
+  172  kubectl get all -n default
+  173  kubectl get nodes
+  174  ls
+  175  git init
+  176  git pull https://github.com/gangassault343/kubernetes-php.git
+  177  git remote -v
+  178  git remote set url https://github.com/gangassault343/kubernetes-php.git
+  179  git remote set-url https://github.com/gangassault343/kubernetes-php.git
+  180  git remote set-url --add https://github.com/gangassault343/kubernetes-php.git
+  181  git remote add origin https://github.com/gangassault343/kubernetes-php.git
+  182  git pull
+  183  ping -c 4 google.com
+  184  ping 127.0.0.1
+  185  ping www.google.com
+  186  ping www.google.co.in
+  187  ping 192.168.0.61
+  188  kubectl get all -o wide
+  189  kubectl get svc
+  190  ls
+  191  kubernetes-app
+  192  mkdir kubernetes-app
+  193  cd kubernetes-app/
+  194  ls 
+  195  vi mysqldb-config.yaml
+  196  vi mysql-deployment.yaml
+  197  vi php-deployment.yaml
+  198  kubectl apply -f mysqldb-config.yaml 
+  199  kubectl apply -f mysql-deployment.yaml 
+  200  kubectl apply -f php-deployment.yaml 
+  201  kubectl get po
+  202  kubectl get svc
+  203  kubectl get pods -o wide
+  204  vi php-deployment.yaml 
+  205  kubectl get pods -o wide
+  206  ping www.google.com
+  207  ping www.aruncloudwhiz.in
+  208  cat /etc/resolv.conf
+  209  vi /etc/resolv.conf
+  210  kubectl get po
+  211  kubectl describe pod php-crud-6958d6fc44-nj9km
+  212  chmod 777 /etc/resolv.conf
+  213  sudo chmod 777 /etc/resolv.conf
+  214  vi /etc/resolv.conf
+  215  ping www.google.com
+  216  ping www.aruncloudwhiz.in
+  217  history
+  218  history > master-node1-cmds.txt
