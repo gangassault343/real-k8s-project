@@ -1,0 +1,5 @@
+kubectl apply -f mysqldb-config.yaml
+kubectl apply -f mysql-deployment.yaml
+kubectl apply -f php-deployment.yaml
+
+now browse with worker node ip:30007
