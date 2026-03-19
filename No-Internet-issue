@@ -11,3 +11,6 @@ sudo chmod 777 /etc/resolv.conf
 //edit the file
 vi /etc/resolv.conf
 nameserver 127.0.0.53 --> 8.8.8.8
+:wq
+
+git clone https://..........
