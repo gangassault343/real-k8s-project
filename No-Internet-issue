@@ -1,0 +1,13 @@
+First 
+ping www.google.com
+
+// If it is not pinging, then do the following
+// Check if the nameserver is 127.0.0.53, then change it to 8.8.8.8
+cat /etc/resolv.conf
+
+// Change permission
+sudo chmod 777 /etc/resolv.conf
+
+//edit the file
+vi /etc/resolv.conf
+nameserver 127.0.0.53 --> 8.8.8.8
