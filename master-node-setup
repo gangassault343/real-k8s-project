@@ -77,11 +77,19 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 🌐 Install Network Plugin (MASTER)
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
+# Check for internet issues inside worker nodes and then
+kubectl rollout restart deploymeht php-app/mysql
 
 # NOW YOUR KUBERNETES MASTER NODE IS ACTIVE AND DO NOT FORGET TO COPY 
 sudo kubeadm join 192.168.0.83:6443 --token e3mm3x.khfndv3o4ys87jfs \
         --discovery-token-ca-cert-hash sha256:a89d9cc70af4f5daed64806c82e89772148f1fe641468b0bd991fcba1e3ce957 (This is used by Worker node to join 
 master node with authentication)
+
+# Get join command
+kubeadm token create --print-join-command
+
+# Force delete stuck pods (IMPORTANT)
+kubectl delete pod --all --grace-period=0 --force
 
 
 
