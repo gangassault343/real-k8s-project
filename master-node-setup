@@ -85,7 +85,7 @@ kubectl apply -f php-deployment.yaml
 
 
 # Check for internet issues inside worker nodes and then
-kubectl rollout restart deploymeht php-app/mysql
+kubectl rollout restart deployment
 
 # NOW YOUR KUBERNETES MASTER NODE IS ACTIVE AND DO NOT FORGET TO COPY 
 sudo kubeadm join 192.168.0.83:6443 --token e3mm3x.khfndv3o4ys87jfs \
