@@ -78,6 +78,9 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
 git clone https://github.com/gangassault343/kubernetes-php.git
+kubectl apply -f mysqldb-config.yaml
+kubectl apply -f mysql-deployment.yaml
+kubectl apply -f php-deployment.yaml
 
 
 # Check for internet issues inside worker nodes and then
