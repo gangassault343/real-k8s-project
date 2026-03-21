@@ -77,6 +77,9 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 🌐 Install Network Plugin (MASTER)
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
+git clone https://github.com/gangassault343/kubernetes-php.git
+
+
 # Check for internet issues inside worker nodes and then
 kubectl rollout restart deploymeht php-app/mysql
 
