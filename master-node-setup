@@ -80,9 +80,14 @@ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
 git clone https://github.com/gangassault343/kubernetes-php.git
 cd kuberbetes-php
+kubectl apply -f pv.yaml
+kubectl apply -f pvc.yaml
 kubectl apply -f mysqldb-config.yaml
 kubectl apply -f mysql-deployment.yaml
 kubectl apply -f php-deployment.yaml
+
+nohup kubectl port-forward svc/php-service 8080:80 --address=0.0.0.0 > port-forward.log 2>&1 &
+
 
 
 # Check for internet issues inside worker nodes and then
