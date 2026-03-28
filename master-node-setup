@@ -68,7 +68,7 @@ sudo kubeadm reset -f
 
 🧠 MASTER NODE ONLY
 # Initialize cluster
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 # After success, run: # Setup kubeconfig
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
